@@ -16,34 +16,84 @@ This repository contains Smart Contract code in Solidity (using Truffle), tests 
 
 To install, download or clone the repo, then:
 
-`npm install`
-`npm --prefix ./src/dapp install ./src/dapp`
+1. `npm install`
+2. `npm --prefix ./src/dapp install ./src/dapp`
 
 `truffle compile`
 
 ## Develop Client
 
 To run truffle tests:
-
-`truffle test ./test/flightSurety.js`
-`truffle test ./test/oracles.js`
-`truffle test ./test/oracleLate.js`
-`truffle test ./test/oraclesOnTime.js`
+1. `./start-ganache.sh`
+2.  In another Terminal : 
+    - `truffle test ./test/flightSurety.js`
+    - `truffle test ./test/oracles.js`
+    - `truffle test ./test/oracleLate.js`
+    - `truffle test ./test/oraclesOnTime.js`
 
 
 To use the server and dapp :
 
 1. `./start-ganache.sh`
-2. `truffle migrate --reset`
+2. `truffle migrate --reset` ( another Terminal)
 3. `npm run server`
-4. `rm -rf ./src/dapp/src/build && cp -r ./build ./src/dapp/src/ && npm --prefix ./src/dapp/ start dapp` 
-    OR
-   `./start-dapp.sh`
+4. `./start-dapp.sh`
+
+
+The server is used for 3 purposes :
+* Register oracles
+* Reigstering a list of Airlines in the FlightSurety contract (in the startup)
+* Serve an API, to retrieve flights list  and to  manage the flight status returned by the oracles ( for simulation purpose)
 
 
 To view dapp:
 
 `http://localhost:8000`
+
+
+## Dapp Snappshots
+
+### Info Tab
+
+![infos](img/infoTab.png)
+
+
+* All  the registered Airlines, retrieved by calling the FlightSuretyApp (smart contract )
+
+* The flights list is retrieved from the backend server
+
+* The passenger accounts ( from  the truffle config)
+
+### Management Tab
+* It is used to disable or enable the FlightSuretyApp smart contract 
+
+![management](img/management.png)
+
+*  And to set the  flight status that will be retrieved by the registered oracles
+![statusList](img/statusList.png)
+
+* After disabling the contract, the airlines list could not be fetched anymore
+![unvailable contract](img/unavailable.png)
+
+### Insurance Tab 
+* From this tab the user can buy the insurance , open request to check the flight status and  pay out the insurance
+
+
+![pay2](img/successPayment2.png)
+
+* Case :The flight is late
+
+![late](img/infoStatusFlightLate.png)
+
+* Case : The flight is on time 
+![time](img/infoFlightOnTime.png)
+
+* Withdraw the insurance : pay out the passenger 
+![withdraw](img/withdrawAmount.png)
+
+
+
+
 
 
 

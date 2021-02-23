@@ -26,21 +26,20 @@ const InsuranceTab = (props) => {
 
     const showAlert = () =>{
         if(type===TYPE_ERROR){
-         return   <Alert id="errorMsg" status="error"  color="black">
+         return   <Alert id="errorMsg" status="error"  colorScheme="red" color="black">
             <AlertIcon />
            {alertMessage}
           </Alert>
 
         }
         else if (type===TYPE_SUCCESS) {
-            return  <Alert id="successMsg" status="success" color="black" >
+            return  <Alert id="successMsg" colorScheme="green" status="success"  zIndex="modal" color="black" >
             <AlertIcon />
            {alertMessage}
           </Alert>
         }
         else if (type===TYPE_INFO) {
-            return  <Alert id="infoMsg
-            " status="info" color="black" >
+            return  <Alert id="infoMsg" colorScheme="blue" status="info" color="black" >
             <AlertIcon />
            {alertMessage}
           </Alert>
@@ -228,7 +227,7 @@ const InsuranceTab = (props) => {
 
 
     return <Box>
-                <Stack>
+       
         <Flex>
             <div className="panel">
                 <div className="input-group mb-3">
@@ -293,7 +292,7 @@ const InsuranceTab = (props) => {
         </Flex>
 
 {showAlert()}
-  </Stack>
+                        
 
 
     </Box>

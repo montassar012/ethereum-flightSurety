@@ -173,7 +173,7 @@ const Contract = (props) => {
     return (
         < React.Fragment >
 
-        < Container   maxW="xl" >
+        < Container   maxW="xl"  zIndex="hide">
         < Tabs
     id = "uncontrolled-tab-example" isFitted size="lg" variant="enclosed">
   <TabList>

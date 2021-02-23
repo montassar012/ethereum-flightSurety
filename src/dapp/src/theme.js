@@ -37,7 +37,7 @@ const Container = {
       w: "100%",
       marginTop: "20%",
       color: "white",
-      bgColor: "rgb(0 0 0 / 86%)"
+      bgColor: "rgb(0 0 0 / 72%)"
     },
 
       // Two sizes: sm and md
@@ -102,7 +102,7 @@ const customTheme = extendTheme({
     config: {
     ...theme.config,
     useSystemColorMode: false,
-    initialColorMode: "dark",
+    initialColorMode: "light",
   },
   })
 
