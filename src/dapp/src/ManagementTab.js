@@ -1,114 +1,77 @@
 import React, {useState, useEffect} from "react";
-import { Box ,Flex,Badge,Text,Switch,FormControl,FormLabel} from "@chakra-ui/react"
+import { Box ,Flex,Stack,Select,Switch,FormControl,FormLabel} from "@chakra-ui/react"
 
 
-import Web3 from 'web3';
 
 
 const ManagementTab = (props) => {
 
   
-    const {flightsuretyapp,isoperational, airlines, flights, passengers,toggleContractStatus} = props;
-    const [isActivated, setActivated]= useState(true);
+    const {isoperational, toggleContractStatus,currentStatus,statusList,axios} = props;
     const [passenger, setPassenger] = useState("");
     const [credit, setCredit] = useState("");
     const [flight, setFlight] = useState("");
     const [amount, setAmount] = useState("");
-    console.log("INSURANCE TAB");
+    // const [currentStatus, setCurrentStatus]= useState(-1);
+    // const [statusList, setStatusList]= useState([]);
+
     console.log({passenger}, {flight}, {amount})
 
 
-      
+  //   const getFlightsStatus = async () => {
+  //     try {
+        
+  //         const {data} = await axios.get('/flightStatus');
+  //         console.log(data);
+            
+  //       //  setCurrentStatus(data.currentStatus);
+  //         setStatusList(data.statusList);
 
-    // const buyInsurance = () => {
-    //     const _flight = JSON.parse(flight);
-    //     console.log({amount, _flight})
-    //     const weiValue = Web3.utils.toWei(amount, 'ether');
-    //     flightsuretyapp.methods
-    //         .buyFlightInsurance(_flight.airline, _flight.callSign, _flight.timestamp)
-    //         .send({from: passenger, value: weiValue, gas: "450000"}, (err, result) => {
-    //             if (err) {
-    //                 console.error(err)
-    //             } else {
-    //                 alert('Payment accepted!');
-    //             }
-    //         });
-    // };
+  //     } catch (e) {
+  //         console.error({e});
+  //     }
+  // };
 
-
-    // const requestFlightStatus= () => {
-    //     const _flight = JSON.parse(flight);
-    //     console.log({amount, _flight, passenger})
-    //     flightsuretyapp.methods
-    //         .fetchFlightStatus(_flight.airline, _flight.callSign, _flight.timestamp)
-    //         .send({from: passenger}, (err, result) => {
-    //             if (err) {
-    //                 console.error(err)
-    //             } else {
-    //                 alert('Flight status requested!')
-    //             }
-    //         });
-    // };
-
-
-   
-
-
-    // const updateCreditField = () => {
-    //     if(passenger == ""){
-    //         console.info("passenger not selected")
-    //         return setCredit(0);
-    //     }
-    //     flightsuretyapp.methods
-    //         .passengerBalance(passenger)
-    //         .call({from: passenger}, (err, result) => {
-    //             if (err) {
-    //                 console.error(err)
-    //             } else {
-    //                 console.log({result})
-    //                 const intResult = parseInt(result);
-    //                 const intCredit = credit && parseInt(credit);
-    //                 if (intCredit !== intResult) {
-    //                     console.log({credit})
-    //                     setCredit(intResult);
-    //                 }
-    //             }
-    //         });
-    // }
-
-    // // flightsuretyapp.events.FlightStatusInfo({fromBlock: 'latest'},(error, event) =>{
-    // //   if(error) {console.log(error);}
-    // //   else {
-    // //   console.log('Caught an event: ');
-    // //   let eventResult = event['returnValues'];
-    // //   console.log(eventResult);}}
-
-      
-    // //   );
-
-    // flightsuretyapp.events.FlightStatusInfo({})
-    // .on('data', async function(event){
-    //     console.log("**********");
-    //     console.log(event.returnValues);
-    //     console.log("*********+++++*");
-       
-    // })
-    // .on('error', console.error);
-
+ // getFlightsStatus();
 
     // Will retrieve credit for the selected passenger
     useEffect(() => {
         console.log('Management TAB')
-       // updateCreditField();
+
 
     });
 
+
+    const changeFlightStatus= (event)=> {
+     axios.post('/flightStatus',{status :parseInt(event.target.value)})
+     .then((res) => {
+
+     })
+     .catch(err => console.error(err))
+    }
+
     return <Box>
-<FormControl display="flex" alignItems="center">
+<FormControl display="box"  spacing={7} alignItems="center">
+<Stack spacing={7}>
+  <Flex>
   <FormLabel htmlFor="activate-contract" mb="0">
     Activate Flight Surety Contract?
   </FormLabel>
   <Switch id="activate-contract" size="md" colorScheme="teal"  isChecked= {isoperational ? "checked" : "" } onChange={toggleContractStatus}  />
+  </Flex>
+  <Flex>
+<FormLabel>
+The Flight Status returned by Oracles ?
+</FormLabel>
+<Select onChange={changeFlightStatus}>
+
+  {
+statusList.map((e, idx) =>
+<option value={e.status} selected={e.status === currentStatus? "selected":""} >{e.label}</option> )
+  }
+</Select>
+</Flex>
+</Stack>
 </FormControl>
  </Box>
 };

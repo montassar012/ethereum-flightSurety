@@ -5,6 +5,8 @@ import express from 'express';
 import faker from 'faker';
 import { SingleEntryPlugin } from 'webpack';
 
+const bodyParser = require("body-parser");
+
 let config = Config['localhost'];
 let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
 web3.eth.defaultAccount = web3.eth.accounts[0];
@@ -18,6 +20,31 @@ const TEN_ETHER = Web3.utils.toWei("10");
 const CONSENSUS_THRESHOLD = 4;
 const VOTE_SUCCESS_THRESHOLD = 2;
 let accIdx = 2;
+let currentFlightStatus = -1;
+const statusList =[
+  { status: -1,
+    label: "RANDOM"
+   },
+   { status: 0,
+     label: "STATUS_CODE_UNKNOWN"
+    },
+    { status: 20,
+     label: "STATUS_CODE_LATE_AIRLINE"
+    },
+    { status: 30,
+     label: "STATUS_CODE_LATE_WEATHER"
+    },
+    { status: 40,
+     label: "STATUS_CODE_LATE_TECHNICAL"
+    },
+    { status: 50,
+     label: "STATUS_CODE_LATE_OTHER"
+    },
+    { status: 10,
+     label: "STATUS_CODE_ON_TIME"
+    }
+
+]
 
 
 
@@ -169,7 +196,7 @@ flightSuretyApp.events.OracleRequest({
 
 
 let oracles = [];
-var ORACLES_COUNT = 40, FIRST_ORACLE_ADDRESS = 60, LAST_ORACLE_ADDRESS = 100;
+var ORACLES_COUNT = 22, FIRST_ORACLE_ADDRESS = 60, LAST_ORACLE_ADDRESS = 82;
 
 web3.eth.getAccounts().then(accounts => {
   // Make sure there enough accounts to support your oracles
@@ -260,15 +287,12 @@ web3.eth.getAccounts().then(accounts => {
               //console.log('Indices: '+result[0]+', '+result[1]+', '+result[2]+'\tfor oracle: '+oracle);
               if(result[0]==index || result[1]==index || result[2]==index) //matching oracle -> respond with random status
               {
-                let flightStatus = 20; // for testing only          
-                // let flightStatus = 10 * (1+Math.floor(Math.random() * 5)); 
-                //                                                  /* Flight status codes
-                //                                                     STATUS_CODE_UNKNOWN = 0; //Oracles should know! - zero out.
-                //                                                     STATUS_CODE_ON_TIME = 10;
-                //                                                     STATUS_CODE_LATE_AIRLINE = 20;
-                //                                                     STATUS_CODE_LATE_WEATHER = 30;
-                //                                                     STATUS_CODE_LATE_TECHNICAL = 40;
-                //                                                     STATUS_CODE_LATE_OTHER = 50;*/
+                let flightStatus= 0
+                if(currentFlightStatus>=0){
+                    flightStatus=currentFlightStatus;
+                }else {
+                        flightStatus = 10 * (1+Math.floor(Math.random() * 5)); 
+                }
                 console.log('HIT- Responding with random flight statuss: '+flightStatus+' from oracle: '+oracle);                                                    
                 //Reply back to smart contract with the determined status code
                 console.log(`info => ${index} $$ ${airline} , ${flight}`);
@@ -309,6 +333,10 @@ registerAirlines()
 .then(registerFlights);
 
 const app = express();
+//Here we are configuring express to use body-parser as middle-ware.
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 app.get('/api', (req, res) => {
     res.send({
       message: 'An API for use with your Dapp!'
@@ -318,6 +346,23 @@ app.get('/api', (req, res) => {
 app.get('/api/flights', (req, res) => {
   res.json(flights);
 })
+
+app.post('/api/flightStatus', (req, res) => {
+  console.log(req.body);
+  currentFlightStatus = req.body.status;
+  res.status(201).json({
+    status: currentFlightStatus
+  });
+})
+
+app.get('/api/flightStatus', (req, res) => {
+
+    res.json({
+      currentStatus : currentFlightStatus,
+      statusList : statusList
+    })
+})
+
 
 export default app;
 

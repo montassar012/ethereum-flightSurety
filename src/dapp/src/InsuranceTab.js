@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { Box ,Flex, Stack,useDisclosure, Alert, AlertIcon} from "@chakra-ui/react"
+import { Box ,Flex, Stack,owner, Alert, AlertIcon} from "@chakra-ui/react"
 
 
 import Web3 from 'web3';
@@ -7,7 +7,7 @@ import Web3 from 'web3';
 
 const InsuranceTab = (props) => {
 
-    const {flightsuretyapp, passengers, flights,web3} = props;
+    const {flightsuretyapp, passengers,owner, flights,statusList,web3} = props;
  
     const [passenger, setPassenger] = useState("");
     const [credit, setCredit] = useState("");
@@ -87,7 +87,7 @@ const InsuranceTab = (props) => {
         console.log({amount, _flight, passenger})
         flightsuretyapp.methods
             .fetchFlightStatus(_flight.airline, _flight.callSign, _flight.timestamp)
-            .send({from: passenger}, (err, result) => {
+            .send({from: owner}, (err, result) => {
                 if (err) {
                     console.error(err)
                     console.error(err)
@@ -113,7 +113,27 @@ const InsuranceTab = (props) => {
     };
 
 
-   
+    const withdrawCredits= () => {
+        setType("");
+        const _flight = JSON.parse(flight);
+        console.log({amount, _flight, passenger})
+        flightsuretyapp.methods
+            .withdrawBalance(Web3.utils.toWei(credit.replace("ETH","").trim(),"ether"))
+            .send({from: passenger}, (err, result) => {
+                if (err) {
+                    console.error(err)
+                    console.error(err)
+                    setAlertrMessage(""+err);
+                    setType(TYPE_ERROR)
+                } else {
+
+                    setAlertrMessage('Withdrawa balance requested!');
+                    setType(TYPE_SUCCESS);
+
+                }
+            });
+
+    }
 
 
     const updateCreditField = () => {
@@ -176,13 +196,22 @@ const InsuranceTab = (props) => {
       
     //   );
 
+
+    flightsuretyapp.events.InsuranceWithdrawal({})
+    .on('data', async function(event){
+        setType("");
+        setAlertrMessage(`the amount "${event.returnValues.amount}" wei transfered to  "${event.returnValues.passengerAddress}" ` );
+        setType(TYPE_INFO);
+    })
+    .on('error', console.error);
     flightsuretyapp.events.FlightStatusInfo({})
     .on('data', async function(event){
         setType("");
         console.log("*****Flight status Infos*****");
         console.log(event.returnValues);
         console.log("*********FlightStatusInfo+++++*");
-        setAlertrMessage(`The status of the flight "${event.returnValues.flight}" is "${event.returnValues.status}" . ` );
+        setAlertrMessage(`The status of the flight "${event.returnValues.flight}" is "${event.returnValues.status}" : ${statusList.filter((e)=> 
+            e.status===parseInt(event.returnValues.status)).map(e => e.label)} ` );
         setType(TYPE_INFO);
        
     })
@@ -195,7 +224,7 @@ const InsuranceTab = (props) => {
         updateCreditField();
 
 
-    });
+    },[alertMessage,passenger,flight]);
 
 
     return <Box>
@@ -254,6 +283,10 @@ const InsuranceTab = (props) => {
                 <button type="button" className="btn btn-dark"
                         onClick={requestFlightStatus}
                         disabled={ !flight || !passenger}>Request Flight Status
+                </button>
+                <button type="button" className="btn btn-dark"
+                        onClick={withdrawCredits}
+                        disabled={ !flight || !passenger}>Withdraw Insurance
                 </button>
 
             </div>

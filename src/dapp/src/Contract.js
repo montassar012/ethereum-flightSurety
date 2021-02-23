@@ -26,6 +26,8 @@ const Contract = (props) => {
     const [flights, setFlights] = useState([]);
     const [passengers, setPassengers] = useState([]);
     const [isOperational, setIsOperational] = useState(false);
+    const [currentStatus, setCurrentStatus]= useState(-1);
+    const [statusList, setStatusList]= useState([]);
     const axios = axiosJS.create({
         baseURL: '/api/',
         timeout: 1000
@@ -64,6 +66,22 @@ const Contract = (props) => {
             console.error({e});
         }
     };
+
+
+
+    const getFlightsStatus = async () => {
+      try {
+        
+          const {data} = await axios.get('/flightStatus');
+          console.log(data);
+            
+         setCurrentStatus(data.currentStatus);
+          setStatusList(data.statusList);
+
+      } catch (e) {
+          console.error({e});
+      }
+  };
     // On startup, initialise
     useEffect(() => {
 
@@ -97,7 +115,7 @@ const Contract = (props) => {
 
                 setOwner(accts[0]);
 
-                  getAirlines().then(getFlights).then(getPassengers(accts));
+                  getAirlines().then(getFlights).then(getFlightsStatus).then(getPassengers(accts));
 
                 flightSuretyApp.methods
                     .isOperational()
@@ -177,8 +195,11 @@ const Contract = (props) => {
         < InsuranceTab
     flightsuretyapp = {flightSuretyApp}
     flights = {flights}
+    owner={owner}
     passengers = {passengers}
+    statusList={statusList}
     web3= {web3}
+
     />
       </TabPanel>
 
@@ -189,7 +210,10 @@ const Contract = (props) => {
     airlines = {airlines}
     flights = {flights}
     passengers = {passengers} 
-    toggleContractStatus= {toggleContractAppStatus}/>
+    toggleContractStatus= {toggleContractAppStatus}
+    currentStatus ={currentStatus}
+    statusList={statusList}
+    axios={axios}/>
 
     </TabPanel>
     </TabPanels>

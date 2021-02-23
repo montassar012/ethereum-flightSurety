@@ -31,13 +31,13 @@ import img from  "./flight.jpg";
 const Container = {
     // The styles all button have in common
     baseStyle: {
-      maxW: "100ch",
+      maxWidth: "50rem",
       mx: "auto",
       px: "1rem",
       w: "100%",
       marginTop: "20%",
       color: "white",
-      bgColor: "rgb(0 0 0 / 72%)"
+      bgColor: "rgb(0 0 0 / 86%)"
     },
 
       // Two sizes: sm and md
