@@ -2,13 +2,23 @@
 
 FlightSurety is a sample application project for Udacity's Blockchain course.
 
+## Versions 
+
+- Truffle v5.1.61 
+- Solidity - 0.6.12 
+- Node v15.5.1
+- Web3.js v1.2.9
+- Ganache v1.2.3
+
 ## Install
 
-This repository contains Smart Contract code in Solidity (using Truffle), tests (also using Truffle), dApp scaffolding (using HTML, CSS and JS) and server app scaffolding.
+This repository contains Smart Contract code in Solidity (using Truffle), tests (also using Truffle), dApp scaffolding (using React, Chakra-U ) and server app scaffolding.
 
 To install, download or clone the repo, then:
 
 `npm install`
+`npm --prefix ./src/dapp install ./src/dapp`
+
 `truffle compile`
 
 ## Develop Client
@@ -17,27 +27,32 @@ To run truffle tests:
 
 `truffle test ./test/flightSurety.js`
 `truffle test ./test/oracles.js`
+`truffle test ./test/oracleLate.js`
+`truffle test ./test/oraclesOnTime.js`
 
-To use the dapp:
 
-`truffle migrate`
-`npm run dapp`
+To use the server and dapp :
+
+1. `./start-ganache.sh`
+2. `truffle migrate --reset`
+3. `npm run server`
+4. `rm -rf ./src/dapp/src/build && cp -r ./build ./src/dapp/src/ && npm --prefix ./src/dapp/ start dapp` 
+    OR
+   `./start-dapp.sh`
+
 
 To view dapp:
 
 `http://localhost:8000`
 
-## Develop Server
 
-`npm run server`
-`truffle test ./test/oracles.js`
 
-## Deploy
 
-To build dapp for prod:
-`npm run dapp:prod`
 
-Deploy the contents of the ./dapp folder
+
+
+
+
 
 
 ## Resources
