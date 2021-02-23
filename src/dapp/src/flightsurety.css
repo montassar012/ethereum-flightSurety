@@ -1,0 +1,75 @@
+body {
+    background-image: url('flight.jpg'); /* Source: iStockPhoto */
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/*.container {*/
+/*    margin-top: 400px;*/
+/*    background-color: #000;*/
+/*    opacity: 0.9;*/
+/*    color: #fff;*/
+/*    padding: 40px;*/
+/*}*/
+
+.top-20 {
+    margin-top: 20px;
+}
+
+h5 {
+    color: #999999;
+}
+
+section {
+    margin-bottom: 50px;
+}
+
+.field {
+    font-weight: bold;
+    text-align: right;
+}
+
+.field-value {
+    color: #0e7fa8;
+}
+
+label.form {
+    font-size: 14px;
+    margin-right: 20px;
+}
+input {
+    margin-right: 30px;
+}
+
+.container {
+    margin-top: 400px;
+    background-color: white;
+}
+
+.info-badge {
+    margin-left: 6px;
+    vertical-align: top;
+    font-size: small;
+    padding: 4px;
+}
+
+h4 {
+    display: inline;
+}
+
+.panel {
+    padding: 20px;
+}
+
+.panel .row {
+    margin-top: 20px;
+}
+
+.passenger-credit {
+    color: grey;
+    margin-bottom: 24px;
+}
+
+.btn {
+    margin-right: 12px;
+}
